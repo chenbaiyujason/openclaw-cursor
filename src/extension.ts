@@ -7,9 +7,43 @@ import { log, logError, getOutputChannel, dispose as disposeLogger } from "./log
 import { showSettingsPanel } from "./settings-panel";
 import { ActivityViewProvider } from "./activity-panel";
 import { agentSetup } from "./commands/agent";
+import { cursorComposerSend } from "./commands/composer";
 import { showSetupWizard } from "./setup-wizard";
 
 let client: GatewayClient | null = null;
+
+/**
+ * 调试命令：弹出输入框并把内容直接注入 Cursor Composer 后发送。
+ */
+async function runComposerSendDebugCommand(): Promise<void> {
+  // 输入框用于快速测试“API 注入发送”链路
+  const prompt = await vscode.window.showInputBox({
+    title: "OpenClaw: Test Composer Send",
+    prompt: "输入要发送到 Cursor Agent 的内容",
+    placeHolder: "例如：XX",
+    ignoreFocusOut: true,
+  });
+  if (!prompt || !prompt.trim()) {
+    vscode.window.showWarningMessage("未输入内容，已取消发送。");
+    return;
+  }
+
+  try {
+    const result = await cursorComposerSend({
+      prompt: prompt.trim(),
+      openPanel: true,
+      createNew: true,
+      submit: true,
+    });
+    vscode.window.showInformationMessage(
+      `Composer 发送成功（模式: ${result.result.mode}，发送命令: ${result.result.sendCommandId}）`
+    );
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    logError(`openclaw.testComposerSend failed: ${message}`);
+    vscode.window.showErrorMessage(`Composer 发送失败：${message}`);
+  }
+}
 
 function createClient(): GatewayClient {
   const cfg = getConfig();
@@ -73,6 +107,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     vscode.commands.registerCommand("openclaw.setup", () => {
       showSetupWizard(context);
     }),
+
+    // 调试命令：从命令面板直接触发 Composer 注入发送
+    vscode.commands.registerCommand("openclaw.testComposerSend", () => runComposerSendDebugCommand()),
 
     // Activity sidebar view
     vscode.window.registerWebviewViewProvider(

@@ -19,7 +19,8 @@
       { "command": "openclaw.toggleReadOnly", "title": "OpenClaw: Toggle Read-Only" },
       { "command": "openclaw.settings", "title": "OpenClaw: Settings" },
       { "command": "openclaw.agentSetup", "title": "OpenClaw: Agent Setup" },
-      { "command": "openclaw.setup", "title": "OpenClaw: Setup Wizard" }
+      { "command": "openclaw.setup", "title": "OpenClaw: Setup Wizard" },
+      { "command": "openclaw.testComposerSend", "title": "OpenClaw: Test Composer Send" }
     ],
     "viewsContainers": {
       "panel": [

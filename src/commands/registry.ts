@@ -35,6 +35,7 @@ import {
 } from "./debug";
 import { terminalRun } from "./terminal";
 import { agentRun, agentSetup, agentStatus } from "./agent";
+import { cursorComposerCommands, cursorComposerSend } from "./composer";
 import { log } from "../logger";
 import { activityStore } from "../activity-store";
 
@@ -95,6 +96,8 @@ handlers.set("vscode.terminal.run", (p) => terminalRun(p as Parameters<typeof te
 handlers.set("vscode.agent.run", (p) => agentRun(p as Parameters<typeof agentRun>[0]));
 handlers.set("vscode.agent.setup", () => agentSetup());
 handlers.set("vscode.agent.status", () => agentStatus());
+handlers.set("vscode.cursor.composer.send", (p) => cursorComposerSend(p as Parameters<typeof cursorComposerSend>[0]));
+handlers.set("vscode.cursor.composer.commands", () => cursorComposerCommands());
 
 export function getRegisteredCommands(): string[] {
   return [...handlers.keys()];

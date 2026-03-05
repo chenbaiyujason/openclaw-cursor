@@ -1,0 +1,28 @@
+{
+  // VS Code 调试配置版本
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // 启动扩展开发主机（调试当前扩展）
+      "name": "Run Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      // 调试前先构建一次，确保 dist 最新
+      "preLaunchTask": "npm: build",
+      // 指定当前工作区为扩展开发路径
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        // 强制以新窗口打开，避免复用当前窗口
+        "--new-window",
+        // 禁用其他扩展，避免 Cursor 内置扩展干扰调试
+        "--disable-extensions",
+        // 明确指定 Development Host 打开当前仓库
+        "${workspaceFolder}"
+      ],
+      // 映射编译后的 JS，配合 sourcemap 命中 TS 断点
+      "outFiles": [
+        "${workspaceFolder}/dist/**/*.js"
+      ]
+    }
+  ]
+}

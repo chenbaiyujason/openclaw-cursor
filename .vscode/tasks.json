@@ -1,0 +1,33 @@
+{
+  // 任务配置版本
+  "version": "2.0.0",
+  "tasks": [
+    {
+      // 构建一次（用于 F5 前置任务）
+      "type": "npm",
+      "script": "build",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      // 持续监听构建（可手动运行）
+      "type": "npm",
+      "script": "watch",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "^(.*)$",
+          "file": 1
+        },
+        "background": {
+          // esbuild watch 启动信号
+          "activeOnStart": true,
+          "beginsPattern": ".*\\[watch\\].*",
+          // esbuild 进入稳定监听状态信号
+          "endsPattern": ".*watching for changes.*"
+        }
+      }
+    }
+  ]
+}
